@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from '../../axios';
+
+import axios from '../../../axios';
 
 import './FullPost.css';
 
@@ -8,19 +9,29 @@ class FullPost extends Component {
     loadedPost: null
   };
 
+  componentDidMount() {
+    if (this.props.match.params.id) {
+      this.loadData();
+    }
+  }
+
   componentDidUpdate(prevProps) {
-    if (this.props.id && prevProps.id !== this.props.id) {
-      axios
-        .get('/posts/' + this.props.id)
-        .then(response => {
-          this.setState({ loadedPost: response.data });
-        });
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      this.loadData();
     }
   }
 
   deletePostHandler = () => {
-    axios.delete('/posts/' + this.props.id);
+    axios.delete('/posts/' + this.props.match.params.id);
   };
+
+  loadData = () => {
+    axios
+      .get('/posts/' + this.props.match.params.id)
+      .then(response => {
+        this.setState({ loadedPost: response.data });
+      });
+  }
 
   render() {
     let post = <p style={{ textAlign: 'center' }}>Please select a Post!</p>;
