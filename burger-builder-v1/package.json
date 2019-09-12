@@ -1,6 +1,6 @@
 {
-  "name": "a3",
-  "version": "0.1.0",
+  "name": "burger-builder-v1",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "axios": "^0.19.0",
