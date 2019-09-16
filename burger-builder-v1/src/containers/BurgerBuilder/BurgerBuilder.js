@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import * as actionTypes from '../../store/actions';
+import * as actionCreators from '../../store/actions/index';
 
 import axios from '../../axios-orders';
 
@@ -16,21 +16,11 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 class BurgerBuilder extends Component {
   state = {
-    purchasable: false,
     purchasing: false,
-    loading: false,
-    error: null
   };
 
   componentDidMount() {
-    // axios
-    //   .get('/ingredients.json')
-    //   .then(response => {
-    //     this.setState({ ingredients: response.data });
-    //   })
-    //   .catch(error => {
-    //     this.setState({ error: error });
-    //   });
+    this.props.getIngredients();
   }
 
   updatePurchaseState = ingredients => {
@@ -69,7 +59,7 @@ class BurgerBuilder extends Component {
 
     let orderSummary = null;
 
-    let burger = this.state.error ? (
+    let burger = this.props.error ? (
       <p>Ingredients can't be loaded</p>
     ) : (
       <Spinner />
@@ -100,10 +90,6 @@ class BurgerBuilder extends Component {
       );
     }
 
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
-
     return (
       <Aux>
         <Modal
@@ -120,17 +106,20 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
-    ingredients: state.ingredients,
-    totalPrice: state.totalPrice
+    ingredients: state.burgerBuilder.ingredients,
+    totalPrice: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     addIngredient: ingredient =>
-      dispatch({ type: actionTypes.ADD_INGREDIENTS, ingredient }),
+      dispatch(actionCreators.addIngredients(ingredient)),
     removeIngredient: ingredient =>
-      dispatch({ type: actionTypes.REMOVE_INGREDIENTS, ingredient })
+      dispatch(actionCreators.removeIngredients(ingredient)),
+    getIngredients: () =>
+      dispatch(actionCreators.getIngredients()),
   };
 };
 

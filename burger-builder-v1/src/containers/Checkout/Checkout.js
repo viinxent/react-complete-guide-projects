@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+
+import * as actionCreators from '../../store/actions/index';
 
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 import ContactData from './ContactData/ContactData';
 
 class Checkout extends Component {
+  componentDidMount() {
+    this.props.purchaseInit();
+  }
+
   checkoutCanceledHandler = () => {
     this.props.history.goBack();
   };
@@ -15,7 +21,17 @@ class Checkout extends Component {
   };
 
   render() {
-    const { ingredients } = this.props;
+    const { ingredients, purchased } = this.props;
+
+    const redirect = <Redirect to="/" />;
+
+    if (!ingredients) {
+      return redirect;
+    }
+
+    if (purchased) {
+      return redirect;
+    }
 
     return (
       <div>
@@ -33,8 +49,20 @@ class Checkout extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { ingredients: state.ingredients };
+const mapDispatchToProps = dispatch => {
+  return {
+    purchaseInit: () => dispatch(actionCreators.purchaseInit())
+  };
 };
 
-export default connect(mapStateToProps)(Checkout);
+const mapStateToProps = state => {
+  return {
+    ingredients: state.burgerBuilder.ingredients,
+    purchased: state.order.purchased
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Checkout);
