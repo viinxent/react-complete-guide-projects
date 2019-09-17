@@ -12,7 +12,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 class Orders extends Component {
   componentDidMount() {
-    this.props.getOrders();
+    this.props.getOrders(this.props.token, this.props.userId);
   }
 
   render() {
@@ -36,12 +36,14 @@ class Orders extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getOrders: () => dispatch(actionCreators.getOrders())
+    getOrders: (token, userId) => dispatch(actionCreators.getOrders(token, userId))
   };
 };
 
 const mapStateToProps = state => {
   return {
+    userId: state.auth.userId,
+    token: state.auth.token,
     loading: state.order.loading,
     orders: state.order.orders
   };

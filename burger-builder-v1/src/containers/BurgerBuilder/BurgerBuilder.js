@@ -16,7 +16,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 class BurgerBuilder extends Component {
   state = {
-    purchasing: false,
+    purchasing: false
   };
 
   componentDidMount() {
@@ -32,6 +32,12 @@ class BurgerBuilder extends Component {
   };
 
   purchaseHandler = () => {
+    if (!this.props.isAuthenticated) {
+      this.props.onSetAuthRedirect('/checkout');
+      this.props.history.push('/auth');
+      return;
+    }
+
     this.setState({ purchasing: true });
   };
 
@@ -76,6 +82,7 @@ class BurgerBuilder extends Component {
             ordered={this.purchaseHandler}
             price={totalPrice}
             purchasable={this.updatePurchaseState(ingredients)}
+            isAuthenticated={this.props.isAuthenticated}
           />
         </Aux>
       );
@@ -109,6 +116,7 @@ const mapStateToProps = state => {
     ingredients: state.burgerBuilder.ingredients,
     totalPrice: state.burgerBuilder.totalPrice,
     error: state.burgerBuilder.error,
+    isAuthenticated: Boolean(state.auth.token)
   };
 };
 
@@ -118,8 +126,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(actionCreators.addIngredients(ingredient)),
     removeIngredient: ingredient =>
       dispatch(actionCreators.removeIngredients(ingredient)),
-    getIngredients: () =>
-      dispatch(actionCreators.getIngredients()),
+    getIngredients: () => dispatch(actionCreators.getIngredients()),
+    onSetAuthRedirect: path => dispatch(actionCreators.setAuthRedirect(path))
   };
 };
 

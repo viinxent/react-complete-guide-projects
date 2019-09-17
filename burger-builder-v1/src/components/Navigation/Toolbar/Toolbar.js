@@ -7,14 +7,14 @@ import Logo from '../../Logo/Logo';
 
 import './Toolbar.css';
 
-const Toolbar = (props) => (
+const Toolbar = props => (
   <header className="Toolbar">
     <DrawerToggle clicked={props.drawerToggleClicked} />
     <div className="LogoContainer" height="80%">
       <Logo />
     </div>
     <nav className="DesktopOnly">
-      <NavigationItems />
+      <NavigationItems isAuthenticated={props.isAuthenticated} />
     </nav>
   </header>
 );
