@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -7,47 +7,45 @@ import * as actionCreators from '../../store/actions/index';
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 import ContactData from './ContactData/ContactData';
 
-class Checkout extends Component {
-  componentDidMount() {
-    this.props.purchaseInit();
-  }
+const Checkout = props => {
+  const { purchaseInit, purchased, ingredients } = props;
 
-  checkoutCanceledHandler = () => {
-    this.props.history.goBack();
+  useEffect(() => {
+    purchaseInit();
+  }, [purchaseInit]);
+
+  const checkoutCanceledHandler = () => {
+    props.history.goBack();
   };
 
-  checkoutContinuedHandler = () => {
-    this.props.history.replace('/checkout/contact-data');
+  const checkoutContinuedHandler = () => {
+    props.history.replace('/checkout/contact-data');
   };
 
-  render() {
-    const { ingredients, purchased } = this.props;
+  const redirect = <Redirect to="/" />;
 
-    const redirect = <Redirect to="/" />;
-
-    if (!ingredients) {
-      return redirect;
-    }
-
-    if (purchased) {
-      return redirect;
-    }
-
-    return (
-      <div>
-        <CheckoutSummary
-          checkoutCanceled={this.checkoutCanceledHandler}
-          checkoutContinued={this.checkoutContinuedHandler}
-          ingredients={ingredients}
-        />
-        <Route
-          path={this.props.match.path + '/contact-data'}
-          component={ContactData}
-        />
-      </div>
-    );
+  if (!ingredients) {
+    return redirect;
   }
-}
+
+  if (purchased) {
+    return redirect;
+  }
+
+  return (
+    <div>
+      <CheckoutSummary
+        checkoutCanceled={checkoutCanceledHandler}
+        checkoutContinued={checkoutContinuedHandler}
+        ingredients={ingredients}
+      />
+      <Route
+        path={props.match.path + '/contact-data'}
+        component={ContactData}
+      />
+    </div>
+  );
+};
 
 const mapDispatchToProps = dispatch => {
   return {

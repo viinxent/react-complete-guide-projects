@@ -19,7 +19,7 @@ const purchaseBurgerState = state => {
 
 const purchaseBurgerSuccess = (state, action) => {
   const order = updateObject(action.payload.order, {
-    id: action.id
+    id: action.payload.id
   });
 
   return updateObject(state, {

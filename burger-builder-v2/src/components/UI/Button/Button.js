@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Button.css';
 
-const Button = (props) => (
+const Button = props => (
   <button
     disabled={props.disabled}
     className={['Button', props.btnType].join(' ')}

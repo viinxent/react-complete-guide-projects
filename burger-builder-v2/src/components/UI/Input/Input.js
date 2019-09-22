@@ -68,7 +68,7 @@ const Input = props => {
       {props.label && <label className="Label">{props.label}</label>}
       {inputElement}
     </div>
-  )
+  );
 };
 
 export default Input;

@@ -10,6 +10,7 @@ export function* purchaseBurgerSaga(action) {
   try {
     const { token, order } = action.payload;
     const response = yield axios.post('/orders.json?auth=' + token, order);
+
     yield put(actions.purchaseBurgerSuccess(response.data.name, order));
   } catch (error) {
     yield put(actions.purchaseBurgerFailed(error));
